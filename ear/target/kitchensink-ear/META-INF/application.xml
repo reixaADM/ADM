@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd" version="7">
+  <description>This kitchensink project demonstrates how to use JSF, CDI, JAX-RS, EJB, JPA, and Bean Validation in an application packaged as an EAR; this is the EAR POM file</description>
+  <display-name>kitchensink-ear-ear</display-name>
+  <module>
+    <ejb>kitchensink-ear-ejb.jar</ejb>
+  </module>
+  <module>
+    <web>
+      <web-uri>kitchensink-ear-web.war</web-uri>
+      <context-root>/kitchensink-ear-web</context-root>
+    </web>
+  </module>
+  <library-directory>lib</library-directory>
+</application>

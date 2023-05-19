@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    JBoss, Home of Professional Open Source
+    Copyright 2015, Red Hat, Inc. and/or its affiliates, and individual
+    contributors by the @authors tag. See the copyright.txt in the
+    distribution for a full listing of individual contributors.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jboss.eap.quickstarts</groupId>
+        <artifactId>kitchensink-ear</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>kitchensink-ear-ejb</artifactId>
+    <packaging>ejb</packaging>
+
+    <name>kitchensink-ear - ejb</name>
+    <description>This kitchensink project demonstrates how to use JSF, CDI, JAX-RS, EJB, JPA, and Bean Validation in an application packaged as an EAR; this is the EJB POM file</description>
+
+    <profiles>
+
+        <!-- PROFILE PARA CORRER O JBOSS CONTAINER DO ARQUILIAN -->
+
+        <!--Este módulo usa o Arqullian para fazer os testes de integração na fase VERIFY, mas apenas com este perfil ativo
+            Todas as explicações para este procedimento são semelhantes às apresentadas no POM do módulo EAR, por favor ler esse POM
+
+            ###### ALTERAÇÕES A EFETUAR NOS PROJETOS PARA TEREM OS TESTES A FUNCIONAR #####
+
+            Neste ficheiro as unicas alterações foram a adição deste perfil e as configurações extra na parte final deste ficheiro
+            Devem no entanto verificar se têm todas as dependencias que aqui estão
+            O Módulo wildfly-arquillian-container-managed  necessita de ter o ficheiro arquillian.xml com a definição da pasta
+            do JBOSS
+
+            Alterações de ficheiros no módulo para copiar para o seu projeto de forma a ter testes de integração em funcionamento
+
+            1 - Deve copiar para o seu projeto todos os ficheiros da pasta src/test deste módulo fornecido
+            2 - Deve adaptar o seu POM.XML com a secção profile
+            3 - Deve confirmar se não lhe falta nenhuma dependencia
+            4 - Deve colocar a secção de plugins managementque encontra no final deste pom.xml no final do seu pom.xml
+            5 - Deve executar a fase verify com o perfil arq-managed ativo.
+            6 - Para ter os testes de integração finais que usam a WEB como Ponto de Entrada a funcionar deve
+            consultar o pom.xml do módulo EAR
+
+            -->
+        <profile>
+            <!-- Run with: mvn clean test -Parq-managed -->
+            <id>arq-managed-ejb</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <!-- DECLARAR O PLUGIN DE TESTES DE INTEGRACAO APENAS NO PROFILE MANAGED -->
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.22.0</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <dependencies>
+
+        <!-- Import the CDI API, we use provided scope as the API is included in JBoss EAP -->
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Test scope dependencies (you may also use TestNG) -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Now we declare any tools needed -->
+
+        <!-- Annotation processor to generate the JPA metamodel classes for
+            typesafe criteria queries -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Bean Validation Implementation 
+             Provides portable constraints such as @Email 
+             Hibernate Validator is shipped in JBoss EAP -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.0.12.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Annotation processor that raising compilation errors whenever constraint
+            annotations are incorrectly used. -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator-annotation-processor</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Import the JPA API, we use provided scope as the API is included in JBoss EAP -->
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Optional, but highly recommended -->
+        <!-- Arquillian allows you to test enterprise code such as EJBs and
+            Transactional(JTA) JPA from JUnit/TestNG -->
+
+
+
+
+        <!-- Declare the APIs we depend on and need for compilation. All of
+            them are provided by JBoss EAP -->
+
+
+        <!-- Import the Common Annotations API (JSR-250), we use provided scope
+            as the API is included in JBoss EAP -->
+        <dependency>
+            <groupId>org.jboss.spec.javax.annotation</groupId>
+            <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Import the EJB API, we use provided scope as the API is included in JBoss EAP -->
+        <dependency>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson-provider</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.interceptor</groupId>
+            <artifactId>jboss-interceptor-api</artifactId>
+            <version>3.1.0-CR3</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.protocol</groupId>
+            <artifactId>arquillian-protocol-servlet</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>
